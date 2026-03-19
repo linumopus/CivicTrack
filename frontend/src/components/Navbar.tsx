@@ -85,12 +85,14 @@ export function Navbar() {
                   let pingColorClass = 'bg-rose-500';
                   let pingGlowClass = 'bg-rose-400';
 
-                  if (latestUnreadThread?.complaintStatus === 'Resolved') {
-                    pingColorClass = 'bg-emerald-500';
-                    pingGlowClass = 'bg-emerald-400';
-                  } else if (latestUnreadThread?.complaintStatus === 'In-Progress') {
-                    pingColorClass = 'bg-amber-400';
-                    pingGlowClass = 'bg-amber-300';
+                  if (latestUnreadThread?.lastMessage?.isSystem) {
+                    if (latestUnreadThread.complaintStatus === 'Resolved') {
+                      pingColorClass = 'bg-emerald-500';
+                      pingGlowClass = 'bg-emerald-400';
+                    } else if (latestUnreadThread.complaintStatus === 'In-Progress') {
+                      pingColorClass = 'bg-amber-400';
+                      pingGlowClass = 'bg-amber-300';
+                    }
                   }
 
                   return (
