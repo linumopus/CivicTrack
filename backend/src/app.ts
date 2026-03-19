@@ -4,11 +4,13 @@ import authRoutes from './routes/auth';
 import complaintRoutes from './routes/complaints';
 import messagesRoutes from './routes/messages';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import { requireDb } from './middleware/requireDb';
 
 export function createApp() {
   const app = express();
 
+  app.use(cors());
   app.use(express.json({ limit: '5mb' }));
 
   app.get('/api/health', (_req, res) =>
