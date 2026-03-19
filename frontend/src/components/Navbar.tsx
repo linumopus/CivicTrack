@@ -12,13 +12,16 @@ export function Navbar() {
   const { unreadCount, latestUnreadThread } = useMessages(token);
 
   const isMessagesPage = location.pathname.includes('/messages');
-  const [hidePingUntil, setHidePingUntil] = useState<number>(0);
+  const [acknowledgedTimestamp, setAcknowledgedTimestamp] = useState<number>(0);
 
   useEffect(() => {
-    if (isMessagesPage) {
-      setHidePingUntil(Date.now());
+    if (isMessagesPage && latestUnreadThread?.lastMessage) {
+      const ts = new Date(latestUnreadThread.lastMessage.createdAt).getTime();
+      if (ts > acknowledgedTimestamp) {
+        setAcknowledgedTimestamp(ts);
+      }
     }
-  }, [isMessagesPage]);
+  }, [isMessagesPage, latestUnreadThread, acknowledgedTimestamp]);
 
   const isCitizen = user?.role === 'citizen';
   const dashboardHref = useMemo(() => (user?.role === 'admin' ? '/admin' : '/user'), [user?.role]);
@@ -75,7 +78,7 @@ export function Navbar() {
                   const pingTime = latestUnreadThread?.lastMessage
                     ? new Date(latestUnreadThread.lastMessage.createdAt).getTime()
                     : 0;
-                  const showPing = !isMessagesPage && unreadCount > 0 && pingTime > hidePingUntil;
+                  const showPing = !isMessagesPage && unreadCount > 0 && pingTime > acknowledgedTimestamp;
 
                   if (!showPing) return null;
 
