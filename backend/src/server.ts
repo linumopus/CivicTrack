@@ -2,6 +2,7 @@ import { createApp } from './app';
 import { connectDb } from './db';
 import { env } from './config/env';
 import path from 'node:path';
+import fs from 'node:fs';
 import express from 'express';
 
 async function main() {
@@ -21,7 +22,12 @@ async function main() {
   void tryConnect();
 
   // Serve frontend on the same port (dev + prod) from built assets
-  const distPath = path.resolve(__dirname, '../../frontend/dist');
+  let distPath = path.resolve(__dirname, '../../frontend/dist');
+  if (!fs.existsSync(distPath)) {
+    // If tsc compiled the output nested (e.g., dist/backend/src/server.js) due to shared types
+    distPath = path.resolve(__dirname, '../../../../frontend/dist');
+  }
+
   app.use(express.static(distPath));
   app.get(/^(?!\/api).*/, (_req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
