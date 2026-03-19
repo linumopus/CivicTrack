@@ -1,0 +1,17 @@
+{
+  "name": "design-thinking",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently -n frontend,backend -c green,blue \"npm --prefix frontend run build:watch\" \"npm --prefix backend run dev\"",
+    "build": "npm --prefix frontend run build && npm --prefix backend run build",
+    "start": "npm --prefix backend run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
